@@ -25,6 +25,8 @@ from rest_framework import permissions
 from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from .views import TokenViewWithUserId
+from user_profile.views import UserViewSet
+from rest_framework.routers import DefaultRouter
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -39,12 +41,16 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
+router = DefaultRouter()
+router.register("user", UserViewSet, basename="user")
+
 urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger',
          cache_timeout=0), name='schema-swagger-ui'),
+    path('api-auth/', include('rest_framework.urls')),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('o/login/', TokenViewWithUserId.as_view(), name='token'),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls', namespace='api')),
-
 ]
+urlpatterns += router.urls

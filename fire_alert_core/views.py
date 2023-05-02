@@ -6,12 +6,13 @@ from django.views.decorators.debug import sensitive_post_parameters
 from oauth2_provider.models import get_access_token_model
 from oauth2_provider.signals import app_authorized
 from oauth2_provider.views.base import TokenView
-from fire_alert_core.serializers import ChangePasswordSerializer, RegisterSerializer
+from user_profile.serializers import ChangePasswordSerializer, RegisterSerializer
 from user_profile.models import UserProfile
 from rest_framework import generics, permissions, response, status
 from django.contrib.auth.models import User
 from django.conf import settings
 from rest_framework.response import Response
+from django.template.loader import get_template
 import re
 from oauth2_provider.models import (
     Application,
@@ -24,6 +25,13 @@ from datetime import (
 )
 from django.shortcuts import get_object_or_404
 from django.utils.crypto import get_random_string
+from datetime import datetime, timedelta
+import random
+from django.conf import settings
+
+from user_profile.models import UserProfile
+from user_profile.utils import Util
+from fire_alert_core import settings
 
 
 class TokenViewWithUserId(TokenView):
@@ -85,6 +93,7 @@ class RegisterView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         password = request.data.get('password')
+        address = request.data.get('address')
         confirm_password = request.data.get('confirm_password')
         first_name = request.data.get('first_name')
         last_name = request.data.get('last_name')
@@ -92,7 +101,7 @@ class RegisterView(generics.CreateAPIView):
 
         email = request.data.get('email')
 
-        if User.objects.filter(username=mobile_number).exists():
+        if User.objects.filter(username=email).exists():
             data = {
                 "error_message": "Mobile number Already exists"
             }
@@ -120,11 +129,34 @@ class RegisterView(generics.CreateAPIView):
             )
 
         user = User.objects.create(
-            username=mobile_number, email=email, first_name=first_name, last_name=last_name)
+            username=email, email=email, first_name=first_name, last_name=last_name)
         user.set_password(password)
         user.save()
 
-        UserProfile.objects.create(user=user,)
+        otp_expiry = datetime.now() + timedelta(minutes=10)
+        otp = random.randint(1000, 9999)
+
+        UserProfile.objects.create(user=user,
+                                   address=address,
+                                   contact_number=mobile_number,
+                                   otp=otp,
+                                   otp_expiry=otp_expiry,
+                                   max_otp_try=settings.MAX_OTP_TRY,
+                                   )
+
+        context_email = {
+            "full_name": f"{user.first_name} {user.last_name}",
+            "otp": otp,
+        }
+        message = get_template('email.html').render(context_email)
+
+        context = {
+            'email_body': message,
+            'to_email': user.email,
+            'email_subject': 'Signup OTP'
+        }
+
+        Util.send_email(context)
 
         oauth_token, refresh_token = self.create_access_token(
             user)

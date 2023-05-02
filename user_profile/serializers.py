@@ -4,6 +4,9 @@ import base64
 
 from django.utils.crypto import get_random_string
 from django.core.files.base import ContentFile
+from datetime import datetime, timedelta
+import random
+from django.conf import settings
 
 
 class RegisterSerializer(serializers.ModelSerializer):

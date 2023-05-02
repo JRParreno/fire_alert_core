@@ -13,7 +13,12 @@
                 "runserver"
             ],
             "django": true,
-            "justMyCode": true
+            "justMyCode": true,
+            "env": {
+                "EMAIL_HOST_USER": "cpstnprj2023@gmail.com",
+                "DEFAULT_FROM_EMAIL": "cpstnprj2023@gmail.com",
+                "EMAIL_HOST_PASSWORD": "ulpavjjdtmzizlrf"
+            }
         }
     ]
 }
