@@ -100,19 +100,18 @@ class RegisterView(generics.CreateAPIView):
         mobile_number = request.data.get('contact_number')
 
         email = request.data.get('email')
-
-        if User.objects.filter(username=email).exists():
+        if User.objects.filter(email=email).exists():
             data = {
-                "error_message": "Mobile number Already exists"
+                "error_message": "Email already exists"
             }
             return response.Response(
                 data=data,
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        if User.objects.filter(email=email).exists():
+        if User.objects.filter(username=email).exists():
             data = {
-                "error_message": "Email Already exists"
+                "error_message": "Mobile number already exists"
             }
             return response.Response(
                 data=data,
@@ -158,15 +157,8 @@ class RegisterView(generics.CreateAPIView):
 
         Util.send_email(context)
 
-        oauth_token, refresh_token = self.create_access_token(
-            user)
-
         data = {
-            "access_token": oauth_token.token,
-            "expires": self.expire_seconds,
-            "token_type": "Bearer",
-            "scope": oauth_token.scope,
-            "refresh_token": refresh_token.token
+            "id": user.pk,
         }
 
         return response.Response(
