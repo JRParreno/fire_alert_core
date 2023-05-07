@@ -3,12 +3,12 @@ import random
 
 from django.conf import settings
 from django.utils import timezone
-from rest_framework import status, viewsets, permissions
+from rest_framework import status, viewsets, permissions, generics, response
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from user_profile.utils import Util
 from .models import UserProfile
-from .serializers import RegisterSerializer
+from .serializers import RegisterSerializer, ProfileSerializer
 from django.template.loader import get_template
 from oauth2_provider.models import (
     Application,
@@ -145,3 +145,92 @@ class UserViewSet(viewsets.ModelViewSet):
         Util.send_email(context)
         # send_otp(instance.phone_number, otp)
         return Response("Successfully generate new OTP.", status=status.HTTP_200_OK)
+
+
+class ProfileView(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ProfileSerializer
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        user_profiles = UserProfile.objects.filter(user=user)
+
+        if user_profiles.exists():
+            user_profile = user_profiles.first()
+
+            data = {
+                "pk": str(user.pk),
+                "username": user.username,
+                "firstName": user.first_name,
+                "lastName": user.last_name,
+                "email": user.email,
+                "address": user_profile.address,
+                "profilePhoto": user_profile.profile_photo.url if user_profile.profile_photo else None,
+                "contactNumber": user_profile.contact_number,
+                "isVerified": user_profile.is_verified,
+                "otpVerified": user_profile.otp_verified,
+            }
+
+            return response.Response(data, status=status.HTTP_200_OK)
+
+        else:
+            error = {
+                "error_message": "Please setup your profile"
+            }
+            return response.Response(error, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, *args, **kwargs):
+        user = self.request.user
+        user_details = self.request.data.get('user')
+        contact_number = self.request.data.get('contact_number')
+        address = self.request.data.get('address')
+        user_email = UserProfile.objects.filter(
+            user__email=user_details['email']).exclude(user=user).exists()
+        check_contact_number = UserProfile.objects.filter(
+            contact_number=contact_number).exclude(user=user).exists()
+
+        if user_email:
+            error = {
+                "error_message": "Email already exists"
+            }
+            return response.Response(error, status=status.HTTP_400_BAD_REQUEST)
+
+        if check_contact_number:
+            error = {
+                "error_message": "Mobile number already exists"
+            }
+            return response.Response(error, status=status.HTTP_400_BAD_REQUEST)
+
+        user_profile = UserProfile.objects.get(user=user)
+
+        user.email = user_details['email']
+        user.first_name = user_details['first_name']
+        user.last_name = user_details['last_name']
+        user.username = user_email
+        user.save()
+
+        user_profile.address = self.request.data.get('address')
+        user_profile.contact_number = contact_number
+        user_profile.save()
+
+        data = {
+            "pk": str(user.pk),
+            "username": user.username,
+            "firstName": user.first_name,
+            "lastName": user.last_name,
+            "email": user.email,
+            "address": user_profile.address,
+            "profilePhoto": user_profile.profile_photo.url if user_profile.profile_photo else None,
+            "contactNumber": user_profile.contact_number,
+            "isVerified": user_profile.is_verified,
+            "otpVerified": user_profile.otp_verified,
+        }
+
+        return response.Response(data, status=status.HTTP_200_OK)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({
+            'request': self.request
+        })
+        return context

@@ -6,7 +6,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from oauth2_provider.models import get_access_token_model
 from oauth2_provider.signals import app_authorized
 from oauth2_provider.views.base import TokenView
-from user_profile.serializers import ChangePasswordSerializer, RegisterSerializer
+from user_profile.serializers import RegisterSerializer
 from user_profile.models import UserProfile
 from rest_framework import generics, permissions, response, status
 from django.contrib.auth.models import User
@@ -23,7 +23,6 @@ from datetime import (
     datetime,
     timedelta
 )
-from django.shortcuts import get_object_or_404
 from django.utils.crypto import get_random_string
 import random
 from django.conf import settings
@@ -31,6 +30,7 @@ from django.conf import settings
 from user_profile.models import UserProfile
 from user_profile.utils import Util
 from fire_alert_core import settings
+from api.serializers import ChangePasswordSerializer
 
 
 class TokenViewWithUserId(TokenView):
