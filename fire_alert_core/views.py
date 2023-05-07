@@ -25,7 +25,6 @@ from datetime import (
 )
 from django.shortcuts import get_object_or_404
 from django.utils.crypto import get_random_string
-from datetime import datetime, timedelta
 import random
 from django.conf import settings
 
