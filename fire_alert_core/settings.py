@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'user_profile',
     'carousel_image',
+    'fire_guard',
     'api',
 
     'rest_framework',
@@ -173,3 +174,4 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400

@@ -160,6 +160,7 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
             data = {
                 "pk": str(user.pk),
+                "profilePk": str(user_profile.pk),
                 "username": user.username,
                 "firstName": user.first_name,
                 "lastName": user.last_name,
@@ -224,6 +225,7 @@ class ProfileView(generics.RetrieveUpdateAPIView):
             "contactNumber": user_profile.contact_number,
             "isVerified": user_profile.is_verified,
             "otpVerified": user_profile.otp_verified,
+            "profilePk": str(user_profile.pk),
         }
 
         return response.Response(data, status=status.HTTP_200_OK)
