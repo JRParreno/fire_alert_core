@@ -1,6 +1,10 @@
 from typing import Iterable, Optional
 from django.db import models
+from api.utils.utils import send_push_message_title
 from user_profile.models import UserProfile
+
+from fcm_django.models import FCMDevice
+from firebase_admin.messaging import Message, Notification
 
 
 class FireAlertServices(models.Model):
@@ -35,8 +39,18 @@ class FireAlertServices(models.Model):
     # send notification if done
     def save(self, *args, **kwargs) -> None:
 
-        if not self.is_done:
-            # SEND NOTIFICATIONS TO USER
-            pass
+        for device in FCMDevice.objects.all():
+            device.send_message(
+                Message(
+                    notification=Notification(
+                        title="FireGuard", body="My Sunog"
+                    ),
+                    data={
+                        "Nick": "Mario",
+                        "body": "great match!",
+                        "Room": "PortugalVSDenmark"
+                    },
+                )
+            )
 
         super(FireAlertServices, self).save(*args, **kwargs)

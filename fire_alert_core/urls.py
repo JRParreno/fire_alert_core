@@ -28,6 +28,8 @@ from .views import TokenViewWithUserId
 from user_profile.views import UserViewSet
 from rest_framework.routers import DefaultRouter
 from django.conf import settings
+from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
+
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -44,6 +46,7 @@ schema_view = get_schema_view(
 
 router = DefaultRouter()
 router.register("user", UserViewSet, basename="user")
+router.register('devices', FCMDeviceAuthorizedViewSet)
 
 urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger',

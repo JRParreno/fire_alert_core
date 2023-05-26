@@ -11,14 +11,16 @@
             "program": "${workspaceFolder}/manage.py",
             "args": [
                 "runserver",
-                "192.168.1.7:8000"
+                "192.168.254.138:8000"
             ],
             "django": true,
             "justMyCode": true,
             "env": {
                 "EMAIL_HOST_USER": "cpstnprj2023@gmail.com",
                 "DEFAULT_FROM_EMAIL": "cpstnprj2023@gmail.com",
-                "EMAIL_HOST_PASSWORD": "ulpavjjdtmzizlrf"
+                "EMAIL_HOST_PASSWORD": "ulpavjjdtmzizlrf",
+                "GOOGLE_APPLICATION_CREDENTIALS": "./application_default_credentials.json",
+                "GOOGLE_CLOUD_PROJECT": "1033318155215"
             }
         }
     ]
