@@ -1,0 +1,37 @@
+{% extends 'front_end/base.html' %}
+{% block content %}
+
+<div class="h-100 d-flex align-items-center justify-content-center mt-4 p-4">
+    <div class="col-sm-12 col-lg-6">
+        <form class="row g-3" action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
+            <p>LOGIN</p>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Email address</label>
+                <input type="email" class="form-control" name="username" id="exampleFormControlInput1"
+                    placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+                <label for="inputPassword5" class="form-label">Password</label>
+                <input type="password" id="inputPassword5" name="password" class="form-control"
+                    aria-labelledby="passwordHelpBlock">
+            </div>
+
+            {% if error %}
+            <div class="mb-3">
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            </div>
+
+
+            {% endif %}
+            <div class="mb-3 text-center">
+                <button type="submit" class="btn btn-primary">SUBMIT</button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+{% endblock %}

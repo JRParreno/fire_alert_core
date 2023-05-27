@@ -1,0 +1,51 @@
+{% extends 'front_end/base.html' %}
+{% load static %}
+{% block content %}
+
+    {% include 'front_end/navigation_bar.html' %}
+    <audio id="soundEffect" autoplay controls>
+          <source src="{% static 'sound/sound.mp3' %}" type="audio/mpeg">
+          Your browser does not support the audio element.
+    </audio>
+	<input type="hidden" id="queue" value="{% url 'refresh-home' %}">
+
+    <div class="container-fluid p-2">
+        <div class="d-flex align-items-center justify-content-center">
+            <p class="h1"> Queue </p>
+        </div>
+        {% include 'front_end/queue.html' %}
+    </div>
+
+{% endblock %}
+{% block extrascripts %}
+    <script type="text/javascript">
+        var numItems = $('.list-group-item').length;
+
+		function refresh() {
+			url = document.getElementById('queue').value
+			$.ajax({
+				url: url,
+				type: 'GET',
+				success: function (data) {
+					$("#queueResult").html(data);
+                    var tempNumItems = $('.list-group-item').length;
+                    if (numItems !== tempNumItems){
+                        numItems = tempNumItems;
+                        sound = document.getElementById('soundEffect');
+
+                        sound.currentTime = 0;
+                        sound.play();
+                       
+                    }
+				}
+			});
+			setTimeout(refresh, 10000);
+            console.log(numItems);
+		}
+
+		$(function () {
+			refresh();
+		});
+
+	</script>   
+	{% endblock extrascripts %}

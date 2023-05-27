@@ -35,13 +35,14 @@ class FireAlertServices(models.Model):
         upload_to='images/services/', blank=True, null=True)
     video = models.FileField(
         upload_to='videos/services/', blank=True, null=True)
+    is_accepted = models.BooleanField(default=False)
     is_done = models.BooleanField(default=False)
     is_rejected = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.sender.user.email + " " + self.date_created.strftime("%m/%d/%Y, %H:%M:%S")
+        return self.address + " " + self.date_created.strftime("%m/%d/%Y, %H:%M:%S")
 
     # send notification if done
     def save(self, *args, **kwargs) -> None:

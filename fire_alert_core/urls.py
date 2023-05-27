@@ -29,7 +29,7 @@ from user_profile.views import UserViewSet
 from rest_framework.routers import DefaultRouter
 from django.conf import settings
 from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
-
+from front_end.views import login_view, home, refresh_home
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -56,6 +56,10 @@ urlpatterns = [
     path('o/login/', TokenViewWithUserId.as_view(), name='token'),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls', namespace='api')),
+    path('login', login_view, name='login'),
+    path('', home, name='home'),
+    path('refresh-home', refresh_home, name='refresh-home'),
+
 ]
 urlpatterns += router.urls
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
