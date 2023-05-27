@@ -6,7 +6,7 @@ class FireAlertServiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FireAlertServices
-        fields = ['sender', 'google_map_url', 'message',
+        fields = ['pk', 'sender', 'google_map_url', 'message',
                   'longitude', 'latitude', 'incident_type',
-                  'image', 'video', 'is_done'
+                  'image', 'video', 'is_done', 'address', 'is_rejected'
                   ]
