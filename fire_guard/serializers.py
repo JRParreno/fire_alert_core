@@ -10,3 +10,11 @@ class FireAlertServiceSerializer(serializers.ModelSerializer):
                   'longitude', 'latitude', 'incident_type',
                   'image', 'video', 'is_done', 'address', 'is_rejected'
                   ]
+
+    def __init__(self, *args, **kwargs):
+        # init context and request
+        context = kwargs.get('context', {})
+        self.request = context.get('request', None)
+        self.kwargs = context.get("kwargs", None)
+
+        super(FireAlertServiceSerializer, self).__init__(*args, **kwargs)

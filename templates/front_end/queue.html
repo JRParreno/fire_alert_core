@@ -1,5 +1,5 @@
 <div id="queueResult" class="list-group">
     {% for queue in queues %}
-        <a href="#" class="list-group-item list-group-item-action">{{ queue }}</a>
+        <a href="{% url 'services:edit_report_view' queue.pk %}" class="list-group-item list-group-item-action">{{ queue }}</a>
     {% endfor %}
 </div>

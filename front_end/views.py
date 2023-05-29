@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from fire_guard.models import FireAlertServices
+from .forms import FireAlertServicesForm
 
 
 def login_view(request):
@@ -33,8 +34,55 @@ def home(request):
 
 
 @login_required(login_url='login')
+def on_going(request):
+
+    queues = FireAlertServices.objects.filter(is_accepted=True, is_done=False)
+
+    return render(request, 'front_end/on_going.html', {'queues': queues})
+
+
+@login_required(login_url='login')
+def completed(request):
+
+    queues = FireAlertServices.objects.filter(
+        is_accepted=True, is_done=True, is_rejected=False)
+
+    return render(request, 'front_end/completed.html', {'queues': queues})
+
+
+@login_required(login_url='login')
+def rejected(request):
+
+    queues = FireAlertServices.objects.filter(is_rejected=True)
+
+    return render(request, 'front_end/rejected.html', {'queues': queues})
+
+
+@login_required(login_url='login')
 def refresh_home(request):
 
-    queues = FireAlertServices.objects.filter(is_accepted=False, is_done=False)
+    queues = FireAlertServices.objects.filter(
+        is_accepted=False, is_done=False, is_rejected=False)
 
     return render(request, 'front_end/queue.html', {'queues': queues})
+
+
+@login_required(login_url='login')
+def edit_report_view(request, pk):
+    service = get_object_or_404(FireAlertServices, pk=pk)
+    form = FireAlertServicesForm(instance=service)
+
+    if request.POST:
+        form = FireAlertServicesForm(request.POST, instance=service)
+
+        if form.is_valid():
+            form.save()
+
+    url = service.google_map_url
+    data = {
+        'form': form,
+        'pk': pk,
+        'url': url
+    }
+
+    return render(request, 'front_end/edit_form.html', data)

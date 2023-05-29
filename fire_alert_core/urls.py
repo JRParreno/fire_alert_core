@@ -56,6 +56,7 @@ urlpatterns = [
     path('o/login/', TokenViewWithUserId.as_view(), name='token'),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls', namespace='api')),
+    path('services/', include('front_end.urls', namespace='services')),
     path('login', login_view, name='login'),
     path('', home, name='home'),
     path('refresh-home', refresh_home, name='refresh-home'),

@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_totp',
     'django_otp.plugins.otp_hotp',
     'django_otp.plugins.otp_static',
+    'crispy_forms',
+    'crispy_bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -206,3 +208,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

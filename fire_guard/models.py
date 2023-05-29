@@ -48,8 +48,10 @@ class FireAlertServices(models.Model):
     def save(self, *args, **kwargs) -> None:
         if not self.is_rejected:
             body = f"Public Safety Alert\n\nPlease take the appropriate safety measures; there is a fire  at the {self.address}."
-            if self.is_done:
+            if self.is_done and self.is_accepted:
                 body = f"Public Safety Alert\n\n"
+            if not self.is_done and self.is_accepted:
+                body = f"Public Safety Alert\n\nYour fire fighter is on the way"
 
             for device in FCMDevice.objects.all():
                 data = {

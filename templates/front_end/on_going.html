@@ -1,0 +1,15 @@
+{% extends 'front_end/base.html' %}
+{% load static %}
+{% block content %}
+
+    {% include 'front_end/navigation_bar.html' %}
+    <input type="hidden" id="queue" value="{% url 'refresh-home' %}">
+
+    <div class="container-fluid p-2">
+        <div class="d-flex align-items-center justify-content-center">
+            <p class="h1"> On Going </p>
+        </div>
+        {% include 'front_end/queue.html' %}
+    </div>
+
+{% endblock %}
