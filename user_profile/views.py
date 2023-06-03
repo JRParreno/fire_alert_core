@@ -8,7 +8,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from user_profile.utils import Util
 from .models import UserProfile
-from .serializers import RegisterSerializer, ProfileSerializer
+from .serializers import RegisterSerializer, ProfileSerializer, UploadIDPhotoSerializer
 from django.template.loader import get_template
 from oauth2_provider.models import (
     Application,
@@ -210,12 +210,13 @@ class ProfileView(generics.RetrieveUpdateAPIView):
         user.username = user_email
         user.save()
 
-        user_profile.address = self.request.data.get('address')
+        user_profile.address = address
         user_profile.contact_number = contact_number
         user_profile.save()
 
         data = {
             "pk": str(user.pk),
+            "profilePk": str(user_profile.pk),
             "username": user.username,
             "firstName": user.first_name,
             "lastName": user.last_name,
@@ -225,7 +226,6 @@ class ProfileView(generics.RetrieveUpdateAPIView):
             "contactNumber": user_profile.contact_number,
             "isVerified": user_profile.is_verified,
             "otpVerified": user_profile.otp_verified,
-            "profilePk": str(user_profile.pk),
         }
 
         return response.Response(data, status=status.HTTP_200_OK)
@@ -236,3 +236,8 @@ class ProfileView(generics.RetrieveUpdateAPIView):
             'request': self.request
         })
         return context
+
+
+class UploadIDPhotoView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UploadIDPhotoSerializer

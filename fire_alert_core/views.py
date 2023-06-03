@@ -180,7 +180,7 @@ class ChangePasswordView(generics.UpdateAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             if not self.object.check_password(serializer.data.get("old_password")):
-                return Response({"error_message": "Wrong password."}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error_message": "Wrong old password."}, status=status.HTTP_400_BAD_REQUEST)
             new_password_entry = serializer.data.get("new_password")
             reg = "[^\w\d]*(([0-9]+.*[A-Za-z]+.*)|[A-Za-z]+.*([0-9]+.*))"
             pat = re.compile(reg)
@@ -192,13 +192,12 @@ class ChangePasswordView(generics.UpdateAPIView):
                         serializer.data.get("new_password"))
                 else:
                     return Response({"error_message":
-                                     "Password must contain a combination of letters "
-                                     "and numbers "},
+                                     "Password must contain a combination of letters and numbers"},
                                     status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response({"error_message": [
-                    "Password must contain at least 8 to 16 characters"]},
-                    status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error_message":
+                                 "Password must contain at least 8 to 16 characters"},
+                                status=status.HTTP_400_BAD_REQUEST)
 
             self.object.save()
             response = {

@@ -1,7 +1,5 @@
 import json
-from typing import Iterable, Optional
 from django.db import models
-from api.utils.utils import send_push_message_title
 from user_profile.models import UserProfile
 
 from fcm_django.models import FCMDevice
@@ -73,17 +71,25 @@ class FireAlertServices(models.Model):
                     )
                 )
         else:
-            for device in FCMDevice.objects.all().filter(sender=self.sender):
+            body = "Your report is rejected"
+            data = {
+                "title": "FireGuard",
+                "body": body,
+                "address": self.address,
+                "is_done": self.is_done,
+                "is_rejected": self.is_rejected,
+                "pk": str(self.pk)
+            }
+            for device in FCMDevice.objects.all().filter(user=self.sender.user):
                 device.send_message(
                     Message(
                         notification=Notification(
-                            title="FireGuard", body="Your report is rejected"
+                            title="FireGuard", body=body
                         ),
                         data={
-                            "title": "FireGuard",
-                            "body": "Your report is rejected",
-                            "address": self.address
-                        },
+                            "json": json.dumps(data)
+                        }
+
                     )
                 )
         super(FireAlertServices, self).save(*args, **kwargs)

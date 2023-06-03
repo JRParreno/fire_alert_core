@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from fire_alert_core import settings
+from fcm_django.models import FCMDevice
+from firebase_admin.messaging import Message, Notification
+import json
 
 
 class UserProfile(models.Model):
@@ -27,4 +30,26 @@ class UserProfile(models.Model):
     otp_max_out = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return f'{self.user.last_name} - {self.user.first_name}'
+        return str(f'{self.user.last_name} - {self.user.first_name}')
+
+    # send notification if done
+    def save(self, *args, **kwargs) -> None:
+        if not self.is_verified:
+            body = "You are verified!"
+            data = {
+                "title": "FireGuard",
+                "body": body,
+            }
+            for device in FCMDevice.objects.all().filter(user=self.sender.user):
+                device.send_message(
+                    Message(
+                        notification=Notification(
+                            title="FireGuard", body=body
+                        ),
+                        data={
+                            "json": json.dumps(data)
+                        }
+
+                    )
+                )
+        super(UserProfile, self).save(*args, **kwargs)

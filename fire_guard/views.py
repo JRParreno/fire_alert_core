@@ -18,5 +18,5 @@ class FireAlertServicesView(generics.ListCreateAPIView):
         user_profiles = UserProfile.objects.filter(user=self.request.user.pk)
         if user_profiles.exists():
             user_profile = user_profiles.first()
-            return FireAlertServices.objects.filter(sender=user_profile, is_done=False).order_by(
+            return FireAlertServices.objects.filter(sender=user_profile, is_done=False, is_rejected=False).order_by(
                 '-date_created')
