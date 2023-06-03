@@ -31,25 +31,3 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return str(f'{self.user.last_name} - {self.user.first_name}')
-
-    # send notification if done
-    def save(self, *args, **kwargs) -> None:
-        if not self.is_verified:
-            body = "You are verified!"
-            data = {
-                "title": "FireGuard",
-                "body": body,
-            }
-            for device in FCMDevice.objects.all().filter(user=self.sender.user):
-                device.send_message(
-                    Message(
-                        notification=Notification(
-                            title="FireGuard", body=body
-                        ),
-                        data={
-                            "json": json.dumps(data)
-                        }
-
-                    )
-                )
-        super(UserProfile, self).save(*args, **kwargs)

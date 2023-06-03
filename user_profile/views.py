@@ -170,6 +170,8 @@ class ProfileView(generics.RetrieveUpdateAPIView):
                 "contactNumber": user_profile.contact_number,
                 "isVerified": user_profile.is_verified,
                 "otpVerified": user_profile.otp_verified,
+                "frontIdPhoto": request.build_absolute_uri(user_profile.front_photo.url) if user_profile.front_photo else None,
+                "backIdPhoto": request.build_absolute_uri(user_profile.back_photo.url) if user_profile.back_photo else None,
             }
 
             return response.Response(data, status=status.HTTP_200_OK)
@@ -207,7 +209,7 @@ class ProfileView(generics.RetrieveUpdateAPIView):
         user.email = user_details['email']
         user.first_name = user_details['first_name']
         user.last_name = user_details['last_name']
-        user.username = user_email
+        user.username = user_details['email']
         user.save()
 
         user_profile.address = address
@@ -226,6 +228,8 @@ class ProfileView(generics.RetrieveUpdateAPIView):
             "contactNumber": user_profile.contact_number,
             "isVerified": user_profile.is_verified,
             "otpVerified": user_profile.otp_verified,
+            "frontIdPhoto": request.build_absolute_uri(user_profile.front_photo.url) if user_profile.front_photo else None,
+            "backIdPhoto": request.build_absolute_uri(user_profile.back_photo.url) if user_profile.back_photo else None,
         }
 
         return response.Response(data, status=status.HTTP_200_OK)
@@ -238,6 +242,7 @@ class ProfileView(generics.RetrieveUpdateAPIView):
         return context
 
 
-class UploadIDPhotoView(generics.CreateAPIView):
+class UploadIDPhotoView(generics.UpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UploadIDPhotoSerializer
+    queryset = UserProfile.objects.all()
