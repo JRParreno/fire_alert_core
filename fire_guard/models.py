@@ -23,7 +23,7 @@ class FireAlertServices(models.Model):
     sender = models.ForeignKey(
         UserProfile, related_name='sender_profille', on_delete=models.CASCADE)
     address = models.CharField(max_length=250,)
-    google_map_url = models.CharField(null=False, blank=False, max_length=100)
+    google_map_url = models.CharField(null=True, blank=True, max_length=100)
     message = models.CharField(null=False, blank=False, max_length=350)
     longitude = models.FloatField(null=False, blank=False)
     latitude = models.FloatField(null=False, blank=False)
@@ -38,6 +38,7 @@ class FireAlertServices(models.Model):
     is_rejected = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
+    travel_time = models.FloatField(default=0)
 
     def __str__(self):
         return self.address + " " + self.date_created.strftime("%m/%d/%Y, %H:%M:%S")
@@ -45,7 +46,13 @@ class FireAlertServices(models.Model):
     # send notification if done
     def save(self, *args, **kwargs) -> None:
         if not self.is_rejected:
-            body = f"Public Safety Alert\n\nPlease take the appropriate safety measures; there is a fire  at the {self.address}."
+            travel_time = f"{round(self.travel_time, 1)} minutes"
+            if self.travel_time > 60:
+                travel_time_hrs = round(self.travel_time / 60,
+                                        1)
+                travel_time = f"{travel_time_hrs} hours"
+
+            body = f"Public Safety Alert\n\nPlease take the appropriate safety measures; there is a fire  at the {self.address}. Fire truck estimated time arrival {travel_time}"
             if self.is_done and self.is_accepted:
                 body = f"Public Safety Alert\n\n"
             if not self.is_done and self.is_accepted:

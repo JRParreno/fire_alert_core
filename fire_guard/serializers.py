@@ -8,7 +8,8 @@ class FireAlertServiceSerializer(serializers.ModelSerializer):
         model = FireAlertServices
         fields = ['pk', 'sender', 'google_map_url', 'message',
                   'longitude', 'latitude', 'incident_type',
-                  'image', 'video', 'is_done', 'address', 'is_rejected'
+                  'image', 'video', 'is_done', 'address', 'is_rejected',
+                  'travel_time', 'date_created'
                   ]
 
     def __init__(self, *args, **kwargs):
