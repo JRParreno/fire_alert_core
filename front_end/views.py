@@ -78,11 +78,11 @@ def edit_report_view(request, pk):
         if form.is_valid():
             form.save()
 
-    url = service.google_map_url
+    url = f'http://www.google.com/maps/place/{service.latitude},{service.longitude}'
     data = {
         'form': form,
         'pk': pk,
-        'url': url
+        'url': url,
     }
 
     return render(request, 'front_end/edit_form.html', data)

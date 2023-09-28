@@ -7,10 +7,10 @@
     <input type="hidden" id="queue" value="{% url 'refresh-home' %}">
 
     <div class="container-fluid p-2">
-        <form method="POST" action="{% url 'services:edit_report_view' pk %}">
+        <form method="POST" action="{% url 'services:edit_report_view' pk %}" >
         {% csrf_token %}
             <div class="mb-3">
-                <a href="{{ url }}">
+                <a href="{{ url }}" target=”_blank”>
                     <p class="h2">Click to open google map</p>
                 </>
             </div>
