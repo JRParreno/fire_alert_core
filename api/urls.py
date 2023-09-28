@@ -2,7 +2,7 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 
 from fire_alert_core.views import RegisterView, ChangePasswordView
-from user_profile.views import ProfileView, RequestPasswordResetEmail, UploadIDPhotoView
+from user_profile.views import ProfileView, RequestPasswordResetEmail, UploadIDPhotoView, UploadPhotoView
 from carousel_image.views import CarouselImageView
 from fire_guard.views import FireAlertServicesView
 app_name = 'api'
@@ -15,6 +15,7 @@ urlpatterns = [
     path('password-reset-confirm/<uidb64>/<token>/',
          auth_views.PasswordResetConfirmView.as_view(),
          name='password-reset-confirm'),
+    path('upload-photo/<pk>', UploadPhotoView.as_view(), name='upload-photo'),
 
 
     path('upload-id-photo/<pk>', UploadIDPhotoView.as_view(), name='upload-id-photo'),

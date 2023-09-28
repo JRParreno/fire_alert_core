@@ -8,7 +8,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from user_profile.utils import Util
 from .models import UserProfile
-from .serializers import RegisterSerializer, ProfileSerializer, UploadIDPhotoSerializer, ResetPasswordEmailRequestSerializer
+from .serializers import (RegisterSerializer, ProfileSerializer, UploadIDPhotoSerializer, ResetPasswordEmailRequestSerializer,
+                          UploadPhotoSerializer)
 from django.template.loader import get_template
 from oauth2_provider.models import (
     Application,
@@ -277,7 +278,7 @@ class RequestPasswordResetEmail(generics.CreateAPIView):
 
             current_site = get_current_site(
                 request=request).domain
-            abs_url: str = f"https://{current_site}{relative_link}"
+            abs_url: str = f"http://{current_site}{relative_link}"
 
             context_email = {
                 "url": abs_url,
@@ -300,3 +301,9 @@ class RequestPasswordResetEmail(generics.CreateAPIView):
             {'success': 'We have sent you a link to reset your password'},
             status=status.HTTP_200_OK
         )
+
+
+class UploadPhotoView(generics.UpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UploadPhotoSerializer
+    queryset = UserProfile.objects.all()
