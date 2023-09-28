@@ -122,3 +122,10 @@ class UploadIDPhotoSerializer(serializers.ModelSerializer):
         self.kwargs = context.get("kwargs", None)
 
         super(UploadIDPhotoSerializer, self).__init__(*args, **kwargs)
+
+
+class ResetPasswordEmailRequestSerializer(serializers.Serializer):
+    email_address = serializers.EmailField(min_length=2)
+
+    class Meta:
+        fields = ['email_address']
