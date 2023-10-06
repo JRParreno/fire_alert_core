@@ -60,6 +60,10 @@ urlpatterns = [
     path('login', login_view, name='login'),
     path('', home, name='home'),
     path('refresh-home', refresh_home, name='refresh-home'),
+    path('password-reset-complete/',
+         auth_views.PasswordResetCompleteView.as_view(
+             template_name='password_reset_complete.html'),
+         name='password_reset_complete'),
 
 ]
 urlpatterns += router.urls

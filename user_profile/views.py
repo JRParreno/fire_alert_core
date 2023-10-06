@@ -270,7 +270,7 @@ class RequestPasswordResetEmail(generics.CreateAPIView):
         check_identity = User.objects.filter(email__exact=email_address)
         if check_identity.exists():
             identity = check_identity.first()
-            uidb64 = urlsafe_b64encode(smart_bytes(identity.id))
+            uidb64 = urlsafe_base64_encode(smart_bytes(identity.id))
             token = PasswordResetTokenGenerator().make_token(identity)
 
             relative_link = reverse(
