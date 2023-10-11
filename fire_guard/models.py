@@ -52,11 +52,11 @@ class FireAlertServices(models.Model):
                                         1)
                 travel_time = f"{travel_time_hrs} hours"
 
-            body = f"Public Safety Alert\n\nPlease take the appropriate safety measures; there is a fire  at the {self.address}. Fire truck estimated time arrival {travel_time}"
+            body = f"Public Safety Alert\n\nPlease take the appropriate safety measures; there is an emergency at the {self.address}. Fire truck estimated time arrival {travel_time}"
             if self.is_done and self.is_accepted:
-                body = f"Public Safety Alert\n\n"
+                body = f"Public Safety Alert\n\nThe BFP Ligao have successfully accomplished their mission. Thank you for the immediate action."
             if not self.is_done and self.is_accepted:
-                body = f"Public Safety Alert\n\nYour fire fighter is on the way"
+                body = f"Public Safety Alert\n\nThe BFP Ligao is on the way to your reported location."
 
             for device in FCMDevice.objects.all():
                 data = {
