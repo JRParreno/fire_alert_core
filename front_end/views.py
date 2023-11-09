@@ -28,7 +28,8 @@ def login_view(request):
 @login_required(login_url='login')
 def home(request):
 
-    queues = FireAlertServices.objects.filter(is_accepted=False, is_done=False)
+    queues = FireAlertServices.objects.filter(
+        is_accepted=False, is_done=False).order_by("-date_created")
     total_queue = queues.count()
     total_on_going = FireAlertServices.objects.filter(
         is_accepted=True, is_done=False, is_rejected=False).count()
@@ -50,7 +51,8 @@ def home(request):
 @login_required(login_url='login')
 def on_going(request):
 
-    queues = FireAlertServices.objects.filter(is_accepted=True, is_done=False)
+    queues = FireAlertServices.objects.filter(
+        is_accepted=True, is_done=False).order_by("-date_created")
 
     return render(request, 'front_end/on_going.html', {'queues': queues})
 
@@ -59,7 +61,7 @@ def on_going(request):
 def completed(request):
 
     queues = FireAlertServices.objects.filter(
-        is_accepted=True, is_done=True, is_rejected=False)
+        is_accepted=True, is_done=True, is_rejected=False).order_by("-date_created")
 
     return render(request, 'front_end/completed.html', {'queues': queues})
 
@@ -67,7 +69,8 @@ def completed(request):
 @login_required(login_url='login')
 def rejected(request):
 
-    queues = FireAlertServices.objects.filter(is_rejected=True)
+    queues = FireAlertServices.objects.filter(
+        is_rejected=True).order_by("-date_created")
 
     return render(request, 'front_end/rejected.html', {'queues': queues})
 
@@ -76,7 +79,7 @@ def rejected(request):
 def refresh_home(request):
 
     queues = FireAlertServices.objects.filter(
-        is_accepted=False, is_done=False, is_rejected=False)
+        is_accepted=False, is_done=False, is_rejected=False).order_by("-date_created")
 
     return render(request, 'front_end/queue.html', {'queues': queues})
 
@@ -105,7 +108,8 @@ def edit_report_view(request, pk):
 @login_required(login_url='login')
 def queue(request):
 
-    queues = FireAlertServices.objects.filter(is_accepted=False, is_done=False)
+    queues = FireAlertServices.objects.filter(
+        is_accepted=False, is_done=False).order_by("-date_created")
 
     return render(request, 'front_end/queue_page.html', {'queues': queues})
 
