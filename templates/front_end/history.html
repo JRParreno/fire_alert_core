@@ -24,19 +24,32 @@
 
             {% for queue in queues %}
 
-            <tr role="button" data-href="{% url 'services:edit_report_view' queue.pk %}" style="cursor: pointer;">
-                <th scope="row">{{ forloop.counter }}</th>
-                <td>{{queue.sender.user.first_name}}</td>
+            <tr>
+                <th role="button" data-href="{% url 'services:edit_report_view' queue.pk %}" style="cursor: pointer;"
+                    scope="row">{{ forloop.counter }}</th>
+                <td role="button" data-href="{% url 'services:edit_report_view' queue.pk %}" style="cursor: pointer;">
+                    {{queue.sender.user.first_name}}
+                </td>
                 <td>{{queue.incident_type}}</td>
                 <td>
+
                     {% if queue.is_rejected %}
-                    Rejected
+                    <button type="button" class="btn btn-danger">
+                        Rejected</button>
+
+
                     {% elif queue.is_done and queue.is_accepted %}
-                    Rescued
+                    <button type="button" class="btn btn-warning">
+                        Rescued</button>
+
                     {% elif queue.is_accepted and not queue.is_done %}
-                    On going
+
+                    <button type="button" class="btn btn-secondary">
+                        On going</button>
                     {% else %}
-                    Queue
+                    <button type="button" class="btn btn-primary">
+                        Queue</button>
+
                     {% endif %}
                 </td>
                 <td>
@@ -44,17 +57,17 @@
                 </td>
                 <td>
                     {% if queue.image %}
-                        <a type="button" class="btn btn-primary" role="button" href="{{queue.image.url}}" target=”_blank”>
+                    <a type="button" class="btn btn-primary" role="button" href="{{queue.image.url}}" target=”_blank”>
                         View Image
-                        </a>
-                    {% endif  %}
+                    </a>
+                    {% endif %}
                 </td>
                 <td>
-                     {% if queue.video %}
-                        <a type="button" class="btn btn-info" role="button" href="{{queue.video.url}}" target=”_blank”>
+                    {% if queue.video %}
+                    <a type="button" class="btn btn-info" role="button" href="{{queue.video.url}}" target=”_blank”>
                         View Video
-                        </a>
-                    {% endif  %}
+                    </a>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}
@@ -70,11 +83,11 @@
 
 {% block extrascripts %}
 <script type="text/javascript">
-$(function(){
-$(".table").on("click", "tr[role=\"button\"]", function (e) {
-window.location = $(this).data("href");
-});
-});
+    $(function () {
+        $(".table").on("click", "th[role=\"button\"]", function (e) {
+            window.location = $(this).data("href");
+        });
+    });
 </script>
 
 {% endblock extrascripts %}
