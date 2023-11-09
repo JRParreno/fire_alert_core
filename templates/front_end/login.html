@@ -3,15 +3,15 @@
 
 <div class="h-100 d-flex align-items-center justify-content-center mt-4 p-4">
     <div class="col-sm-12 col-lg-6">
-        <form class="row g-3" action="{% url 'login' %}" method="POST">
+        <form class="g-3" action="{% url 'login' %}" method="POST">
             {% csrf_token %}
             <p>LOGIN</p>
-            <div class="mb-3">
+            <div class="form-group">
                 <label for="exampleFormControlInput1" class="form-label">Email address</label>
                 <input type="email" class="form-control" name="username" id="exampleFormControlInput1"
                     placeholder="name@example.com">
             </div>
-            <div class="mb-3">
+            <div class="form-group">
                 <label for="inputPassword5" class="form-label">Password</label>
                 <input type="password" id="inputPassword5" name="password" class="form-control"
                     aria-labelledby="passwordHelpBlock">

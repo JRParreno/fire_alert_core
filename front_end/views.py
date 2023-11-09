@@ -29,8 +29,22 @@ def login_view(request):
 def home(request):
 
     queues = FireAlertServices.objects.filter(is_accepted=False, is_done=False)
+    total_queue = queues.count()
+    total_on_going = FireAlertServices.objects.filter(
+        is_accepted=True, is_done=False, is_rejected=False).count()
+    total_completed = FireAlertServices.objects.filter(
+        is_accepted=True, is_done=True, is_rejected=False).count()
+    total_rejected = FireAlertServices.objects.filter(is_rejected=True).count()
 
-    return render(request, 'front_end/home.html', {'queues': queues})
+    context = {
+        "total_queue": total_queue,
+        "total_on_going": total_on_going,
+        "total_completed": total_completed,
+        "total_rejected": total_rejected,
+        "queues": "queues"
+    }
+
+    return render(request, 'front_end/home.html', context)
 
 
 @login_required(login_url='login')
@@ -86,3 +100,11 @@ def edit_report_view(request, pk):
     }
 
     return render(request, 'front_end/edit_form.html', data)
+
+
+@login_required(login_url='login')
+def queue(request):
+
+    queues = FireAlertServices.objects.filter(is_accepted=False, is_done=False)
+
+    return render(request, 'front_end/queue_page.html', {'queues': queues})
