@@ -108,3 +108,11 @@ def queue(request):
     queues = FireAlertServices.objects.filter(is_accepted=False, is_done=False)
 
     return render(request, 'front_end/queue_page.html', {'queues': queues})
+
+
+@login_required(login_url='login')
+def history_report(request):
+
+    queues = FireAlertServices.objects.all().order_by("-date_created")
+    print(queues)
+    return render(request, 'front_end/history.html', {'queues': queues})

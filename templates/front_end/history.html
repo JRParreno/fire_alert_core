@@ -1,0 +1,80 @@
+{% extends 'front_end/base.html' %}
+{% load static %}
+{% block content %}
+
+{% include 'front_end/navigation_bar.html' %}
+
+<div class="container-fluid p-2">
+    <div class="col d-flex justify-content-center align-items-center mb-4">
+        <img src="{% static 'img/brand.jpg' %}" class="rounded-circle" alt="..." style="height: 15rem; width: 15rem;">
+    </div>
+    <table class="table  table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col" style="width:20%">Name</th>
+                <th scope="col" style="width:20%">Type of Incident</th>
+                <th scope="col" style="width:15%">Status</th>
+                <th scope="col" style="width:15%">Date</th>
+                <th scope="col" style="width:10%">Image</th>
+                <th scope="col" style="width:10%">Video</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for queue in queues %}
+
+            <tr role="button" data-href="{% url 'services:edit_report_view' queue.pk %}" style="cursor: pointer;">
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{queue.sender.user.first_name}}</td>
+                <td>{{queue.incident_type}}</td>
+                <td>
+                    {% if queue.is_rejected %}
+                    Rejected
+                    {% elif queue.is_done and queue.is_accepted %}
+                    Rescued
+                    {% elif queue.is_accepted and not queue.is_done %}
+                    On going
+                    {% else %}
+                    Queue
+                    {% endif %}
+                </td>
+                <td>
+                    {{queue.date_created}}
+                </td>
+                <td>
+                    {% if queue.image %}
+                        <a type="button" class="btn btn-primary" role="button" href="{{queue.image.url}}" target=”_blank”>
+                        View Image
+                        </a>
+                    {% endif  %}
+                </td>
+                <td>
+                     {% if queue.video %}
+                        <a type="button" class="btn btn-info" role="button" href="{{queue.video.url}}" target=”_blank”>
+                        View Video
+                        </a>
+                    {% endif  %}
+                </td>
+            </tr>
+            {% endfor %}
+
+
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+
+
+{% block extrascripts %}
+<script type="text/javascript">
+$(function(){
+$(".table").on("click", "tr[role=\"button\"]", function (e) {
+window.location = $(this).data("href");
+});
+});
+</script>
+
+{% endblock extrascripts %}
