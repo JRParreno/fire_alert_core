@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-5_yc&bi-g!)5dm1x%02@#5%p=k%c94mvg!h%&m^#(_s9#kezj_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['fire-alert-core.onrender.com', '127.0.0.1']
 
 
 # Application definition
@@ -206,7 +206,7 @@ if not DEBUG:
 
     # Turn on WhiteNoise storage backend that takes care of compressing static files
     # and creating unique names for each version so they can safely be cached forever.
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
