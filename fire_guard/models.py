@@ -58,7 +58,7 @@ class FireAlertServices(models.Model):
             if not self.is_done and self.is_accepted:
                 body = f"Public Safety Alert\n\nThe BFP Ligao is on the way to your reported location."
 
-            for device in FCMDevice.objects.all():
+            for device in FCMDevice.objects.all().filter(user=self.sender.user):
                 data = {
                     "title": "FireGuard",
                     "body": body,
