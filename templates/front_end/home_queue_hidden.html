@@ -1,5 +1,81 @@
-<div id="queueResult" class="list-group" style="display: none;">
-    {% for queue in queues %}
-        <a href="#" class="list-group-item list-group-item-action">{{ queue }}</a>
-    {% endfor %}
+<div id="queueResult">
+<div class="container-fluid p-2">
+    <div class="row">
+        <div class="col-sm-6 py-4">
+            <a href="{% url 'services:queue' %}" style="color: black;">
+                <div class="card" style="background-color: #F9EE98;">
+                    <div class="card-body" style="height: 10rem;">
+                        <h5 class="card-title">QUEUE</h5>
+                        <p id="totalQueue" class="card-text text-center h3">{{total_queue}}</p>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+        <div class="col-sm-6 py-4">
+            <a href="{% url 'services:on_going' %}" style="color: black;">
+                <div class="card" style="background-color: #F9EE98;">
+                    <div class="card-body " style="height: 10rem;">
+                        <h5 class="card-title">ON GOING</h5>
+                        <p class="card-text text-center h3">{{total_on_going}}</p>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 py-4">
+            <a href="{% url 'services:completed' %}" style="color: black;">
+                <div class="card" style="background-color: #F9EE98;">
+                    <div class="card-body card-block " style="height: 10rem;">
+                        <h5 class="card-title">COMPLETED</h5>
+                        <p class="card-text text-center h3">{{total_completed}}</p>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+        <div class="col-sm-6 py-4">
+            <a href="{% url 'services:rejected' %}" style="color: black;">
+                <div class="card" style="background-color: #F9EE98;">
+                    <div class="card-body card-block " style="height: 10rem;">
+                        <h5 class="card-title">REJECTED</h5>
+                        <p class="card-text text-center h3">{{total_rejected}}</p>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-sm-6 py-4">
+            <a href="{% url 'services:history_report' %}" style="color: black;">
+                <div class="card card-block" style="height: 10rem; background-color: #F9EE98;">
+                    <div class="card-body d-flex justify-content-center align-items-center">
+                        <h5 class="card-text text-center">HISTORY OF THE REPORTS</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+        <div id="notif" class="card alert-fixed" style="display: none;">
+        <div class="card-header">
+            🚨Emergency Report
+        </div>
+        <div class="card-body">
+            <p class="card-text">There is an emergency reported at this moment.
+                Immediate attention required. Your cooperation is important for an efficient response!
+            </p>
+            <div class="row">
+                <div class="col-sm">
+                    <a href="#" class="btn btn-danger" onclick="myFunction()">Close</a>
+                </div>
+                <div class="col-sm">
+                    <a href="{% url 'services:queue' %}" class="btn btn-primary">View Report</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

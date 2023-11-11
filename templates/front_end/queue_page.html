@@ -3,11 +3,7 @@
 {% block content %}
 
     {% include 'front_end/navigation_bar.html' %}
-    <input type="hidden" id="queue" value="{% url 'refresh-home' %}">
-<audio id="soundEffect" autoplay controls>
-    <source src="{% static 'sound/sound.mp3' %}" type="audio/mpeg">
-    Your browser does not support the audio element.
-</audio>
+    <input type="hidden" id="queue" value="{% url 'refresh-queue' %}">
 
     <div class="container-fluid p-2">
         <div class="d-flex align-items-center justify-content-center">
@@ -15,38 +11,11 @@
         </div>
         {% include 'front_end/queue.html' %}
     </div>
-    <div id="notif" class="card alert-fixed" style="display: none;">
-        <div class="card-header">
-            🚨Emergency Report
-        </div>
-        <div class="card-body" >
-            <p class="card-text">There is an emergency reported at this moment.
-                Immediate attention required. Your cooperation is important for an efficient response!
-            </p>
-            <div class="row">
-                <div class="col-sm">
-                    <a href="#" class="btn btn-danger" onclick="myFunction()">Close</a>
-                </div>
-                <div class="col-sm">
-                    <a href="{% url 'home' %}" class="btn btn-primary">View Report</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
 {% endblock %}
 {% block extrascripts %}
     <script type="text/javascript">
-            var numItems = $('.list-group-item').length;
 
-        function myFunction() {
-            var x = document.getElementById("notif");
-            if (x.style.display === "none") {
-                x.style.display = "block";
-            } else {
-                x.style.display = "none";
-            }
-        }
 
 		function refresh() {
 			var url = document.getElementById('queue').value
@@ -56,16 +25,6 @@
 				type: 'GET',
 				success: function (data) {
                     $("#queueResult").html(data);
-                    var tempNumItems = $('.list-group-item').length;              
-
-                    if (numItems !== tempNumItems && tempNumItems > 0){
-                        numItems = tempNumItems;
-                        myFunction();
-                        sound = document.getElementById('soundEffect');
-                        sound.currentTime = 0;
-                        sound.play();                       
-                    }
-
 				}
 			});
 			setTimeout(refresh, 10000);

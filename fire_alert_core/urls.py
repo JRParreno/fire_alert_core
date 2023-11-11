@@ -29,7 +29,7 @@ from user_profile.views import UserViewSet
 from rest_framework.routers import DefaultRouter
 from django.conf import settings
 from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
-from front_end.views import login_view, home, refresh_home
+from front_end.views import login_view, home, refresh_home, refresh_queue
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -60,6 +60,7 @@ urlpatterns = [
     path('login', login_view, name='login'),
     path('', home, name='home'),
     path('refresh-home', refresh_home, name='refresh-home'),
+    path('refresh-queue', refresh_queue, name='refresh-queue'),
     path('password-reset-complete/',
          auth_views.PasswordResetCompleteView.as_view(
              template_name='password_reset_complete.html'),

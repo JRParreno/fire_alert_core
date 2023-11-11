@@ -37,7 +37,6 @@ class TokenViewWithUserId(TokenView):
     @method_decorator(sensitive_post_parameters("password"))
     def post(self, request, *args, **kwargs):
         url, headers, body, status = self.create_token_response(request)
-        print(body)
 
         if status == 200:
             body = json.loads(body)

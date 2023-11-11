@@ -29,7 +29,7 @@ def login_view(request):
 def home(request):
 
     queues = FireAlertServices.objects.filter(
-        is_accepted=False, is_done=False).order_by("-date_created")
+        is_accepted=False, is_done=False, is_rejected=False).order_by("-date_created")
     total_queue = queues.count()
     total_on_going = FireAlertServices.objects.filter(
         is_accepted=True, is_done=False, is_rejected=False).count()
@@ -80,8 +80,22 @@ def refresh_home(request):
 
     queues = FireAlertServices.objects.filter(
         is_accepted=False, is_done=False, is_rejected=False).order_by("-date_created")
+    total_queue = queues.count()
+    total_on_going = FireAlertServices.objects.filter(
+        is_accepted=True, is_done=False, is_rejected=False).count()
+    total_completed = FireAlertServices.objects.filter(
+        is_accepted=True, is_done=True, is_rejected=False).count()
+    total_rejected = FireAlertServices.objects.filter(is_rejected=True).count()
 
-    return render(request, 'front_end/queue.html', {'queues': queues})
+    context = {
+        "total_queue": total_queue,
+        "total_on_going": total_on_going,
+        "total_completed": total_completed,
+        "total_rejected": total_rejected,
+        "queues": "queues"
+    }
+
+    return render(request, 'front_end/home_queue_hidden.html', context)
 
 
 @login_required(login_url='login')
@@ -115,8 +129,16 @@ def queue(request):
 
 
 @login_required(login_url='login')
+def refresh_queue(request):
+
+    queues = FireAlertServices.objects.filter(
+        is_accepted=False, is_done=False, is_rejected=False).order_by("-date_created")
+
+    return render(request, 'front_end/queue.html', {'queues': queues})
+
+
+@login_required(login_url='login')
 def history_report(request):
 
     queues = FireAlertServices.objects.all().order_by("-date_created")
-    print(queues)
     return render(request, 'front_end/history.html', {'queues': queues})

@@ -9,91 +9,6 @@
 </audio>
 <input type="hidden" id="queue" value="{% url 'refresh-home' %}">
         {% include 'front_end/home_queue_hidden.html' %}
-
-<div class="container-fluid p-2">
-    <div class="row">
-        <div class="col-sm-6 py-4">
-            <a href="{% url 'services:queue' %}" style="color: black;">
-                <div class="card" style="background-color: #F9EE98;">
-                    <div class="card-body" style="height: 10rem;">
-                        <h5 class="card-title">QUEUE</h5>
-                        <p class="card-text text-center h3">{{total_queue}}</p>
-                    </div>
-                </div>
-            </a>
-
-        </div>
-        <div class="col-sm-6 py-4">
-            <a href="{% url 'services:on_going' %}" style="color: black;">
-                <div class="card" style="background-color: #F9EE98;">
-                    <div class="card-body " style="height: 10rem;">
-                        <h5 class="card-title">ON GOING</h5>
-                        <p class="card-text text-center h3">{{total_on_going}}</p>
-                    </div>
-                </div>
-            </a>
-
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6 py-4">
-            <a href="{% url 'services:completed' %}" style="color: black;">
-                <div class="card" style="background-color: #F9EE98;">
-                    <div class="card-body card-block " style="height: 10rem;">
-                        <h5 class="card-title">COMPLETED</h5>
-                        <p class="card-text text-center h3">{{total_completed}}</p>
-                    </div>
-                </div>
-            </a>
-
-        </div>
-
-        <div class="col-sm-6 py-4">
-            <a href="{% url 'services:rejected' %}" style="color: black;">
-                <div class="card" style="background-color: #F9EE98;">
-                    <div class="card-body card-block " style="height: 10rem;">
-                        <h5 class="card-title">REJECTED</h5>
-                        <p class="card-text text-center h3">{{total_rejected}}</p>
-                    </div>
-                </div>
-            </a>
-
-        </div>
-    </div>
-    <div class="row d-flex justify-content-center">
-        <div class="col-sm-6 py-4">
-            <a href="{% url 'services:history_report' %}" style="color: black;">
-                <div class="card card-block" style="height: 10rem; background-color: #F9EE98;">
-                    <div class="card-body d-flex justify-content-center align-items-center">
-                        <h5 class="card-text text-center">HISTORY OF THE REPORTS</h5>
-                    </div>
-                </div>
-            </a>
-        </div>
-    </div>
-
-
-
-
-    <div id="notif" class="card alert-fixed" style="display: none;">
-        <div class="card-header">
-            🚨Emergency Report
-        </div>
-        <div class="card-body">
-            <p class="card-text">There is an emergency reported at this moment.
-                Immediate attention required. Your cooperation is important for an efficient response!
-            </p>
-            <div class="row">
-                <div class="col-sm">
-                    <a href="#" class="btn btn-danger" onclick="myFunction()">Close</a>
-                </div>
-                <div class="col-sm">
-                    <a href="{% url 'home' %}" class="btn btn-primary">View Report</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
 
 
@@ -101,8 +16,9 @@
 {% endblock %}
 {% block extrascripts %}
 <script type="text/javascript">
-    var numItems = $('.list-group-item').length;
+    var numItems = $('#totalQueue').text();
 
+    console.log(numItems);
     function myFunction() {
         var x = document.getElementById("notif");
         if (x.style.display === "none") {
@@ -120,23 +36,26 @@
             type: 'GET',
             success: function (data) {
                 $("#queueResult").html(data);
-                var tempNumItems = $('.list-group-item').length;
+                var tempNumItems = $('#totalQueue').text();
 
-                if (numItems !== tempNumItems && tempNumItems > 0) {
+                console.log(numItems);
+                console.log(tempNumItems);
+
+                if (numItems < tempNumItems && tempNumItems > 0) {
                     numItems = tempNumItems;
                     myFunction();
                     sound = document.getElementById('soundEffect');
                     sound.currentTime = 0;
                     sound.play();
                 }
-
+             setTimeout(refresh, 10000);
+        
             }
         });
-        setTimeout(refresh, 10000);
     }
 
     $(function () {
-        refresh();
+        refresh()
     });
 </script>
 {% endblock extrascripts %}
